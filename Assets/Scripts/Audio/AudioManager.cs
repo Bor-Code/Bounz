@@ -98,4 +98,13 @@ public class AudioManager : MonoBehaviour
         _musicSource.Play();
     }
     public void StopMusic() => _musicSource.Stop();
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = volume;
+        if (_musicSource != null) _musicSource.volume = volume;
+    }
+    public void SetSFXVolume(float volume)
+    {
+        sfxVolume = volume;
+    }
 }
