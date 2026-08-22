@@ -78,12 +78,29 @@ public class QuestManager : MonoBehaviour
     private void SaveQuests()
     {
         string json = JsonUtility.ToJson(new QuestSaveData { quests = activeQuests });
-        PlayerPrefs.SetString(QuestsSaveKey, json);
-        PlayerPrefs.Save();
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.CurrentSave.questDataJson = json;
+            SaveManager.Instance.SaveGame();
+        }
+        else
+        {
+            PlayerPrefs.SetString(QuestsSaveKey, json);
+            PlayerPrefs.Save();
+        }
     }
     private void LoadQuests()
     {
-        string json = PlayerPrefs.GetString(QuestsSaveKey, "");
+        string json = "";
+        if (SaveManager.Instance != null && !string.IsNullOrEmpty(SaveManager.Instance.CurrentSave.questDataJson))
+        {
+            json = SaveManager.Instance.CurrentSave.questDataJson;
+        }
+        else
+        {
+            json = PlayerPrefs.GetString(QuestsSaveKey, "");
+        }
+        
         if (string.IsNullOrEmpty(json))
         {
             GenerateDefaultQuests();

@@ -23,44 +23,57 @@ public class SkinManager : MonoBehaviour
     }
     public int GetTotalScore()
     {
-        return PlayerPrefs.GetInt(TotalScoreKey, 0);
+        return SaveManager.Instance != null ? SaveManager.Instance.CurrentSave.totalScore : 0;
     }
     public void AddTotalScore(int amount)
     {
-        int current = GetTotalScore();
-        PlayerPrefs.SetInt(TotalScoreKey, current + amount);
-        PlayerPrefs.Save();
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.CurrentSave.totalScore += amount;
+            SaveManager.Instance.SaveGame();
+        }
     }
     public bool SpendTotalScore(int amount)
     {
         int current = GetTotalScore();
-        if (current >= amount)
+        if (current >= amount && SaveManager.Instance != null)
         {
-            PlayerPrefs.SetInt(TotalScoreKey, current - amount);
-            PlayerPrefs.Save();
+            SaveManager.Instance.CurrentSave.totalScore -= amount;
+            SaveManager.Instance.SaveGame();
             return true;
         }
         return false;
     }
     public bool IsSkinUnlocked(string id)
     {
-        return PlayerPrefs.GetInt(UnlockedSkinsPrefix + id, 0) == 1;
+        if (SaveManager.Instance != null)
+        {
+            return SaveManager.Instance.CurrentSave.unlockedSkins.Contains(id);
+        }
+        return false;
     }
     private void UnlockSkin(string id)
     {
-        PlayerPrefs.SetInt(UnlockedSkinsPrefix + id, 1);
-        PlayerPrefs.Save();
+        if (SaveManager.Instance != null && !SaveManager.Instance.CurrentSave.unlockedSkins.Contains(id))
+        {
+            SaveManager.Instance.CurrentSave.unlockedSkins.Add(id);
+            SaveManager.Instance.SaveGame();
+        }
     }
     public string GetSelectedSkinId()
     {
-        return PlayerPrefs.GetString(SelectedSkinKey, skinConfig != null && skinConfig.skins.Length > 0 ? skinConfig.skins[0].id : "");
+        if (SaveManager.Instance != null && !string.IsNullOrEmpty(SaveManager.Instance.CurrentSave.selectedSkinId))
+        {
+            return SaveManager.Instance.CurrentSave.selectedSkinId;
+        }
+        return skinConfig != null && skinConfig.skins.Length > 0 ? skinConfig.skins[0].id : "";
     }
     public void SelectSkin(string id)
     {
-        if (IsSkinUnlocked(id))
+        if (IsSkinUnlocked(id) && SaveManager.Instance != null)
         {
-            PlayerPrefs.SetString(SelectedSkinKey, id);
-            PlayerPrefs.Save();
+            SaveManager.Instance.CurrentSave.selectedSkinId = id;
+            SaveManager.Instance.SaveGame();
             ApplySelectedSkin();
         }
     }
