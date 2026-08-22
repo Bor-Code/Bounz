@@ -1,27 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
 public class SkinItemUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text priceOrStatusText;
     [SerializeField] private Image colorPreview;
     [SerializeField] private Button actionButton;
-
     private SkinData _skin;
     private bool _isUnlocked;
     private System.Action<SkinData, bool> _onClickCallback;
-
     public void Setup(SkinData skin, bool isUnlocked, bool isSelected, System.Action<SkinData, bool> onClick)
     {
         _skin = skin;
         _isUnlocked = isUnlocked;
         _onClickCallback = onClick;
-
         if (nameText != null) nameText.text = skin.displayName;
         if (colorPreview != null) colorPreview.color = skin.color;
-
         if (priceOrStatusText != null)
         {
             if (isSelected)
@@ -31,8 +26,6 @@ public class SkinItemUI : MonoBehaviour
             else
                 priceOrStatusText.text = skin.price.ToString();
         }
-
-        // Seçiliyse buton tıklanamaz olsun (zaten seçili)
         if (actionButton != null)
         {
             actionButton.interactable = !isSelected;
@@ -40,7 +33,6 @@ public class SkinItemUI : MonoBehaviour
             actionButton.onClick.AddListener(OnButtonClicked);
         }
     }
-
     private void OnButtonClicked()
     {
         _onClickCallback?.Invoke(_skin, _isUnlocked);

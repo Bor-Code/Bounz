@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public enum PlatformType
 {
     Safe,
@@ -8,7 +7,6 @@ public enum PlatformType
     SizeShift,
     Moving
 }
-
 [System.Serializable]
 public struct PlatformTypeWeight
 {
