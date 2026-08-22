@@ -56,12 +56,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnPressStarted()
     {
+        if (GameManager.Instance?.State != GameManager.GameState.Playing) return;
         _chargeTimer = 0f;
         _isCharging = true;
     }
 
     private void OnPressEnded()
     {
+        if (GameManager.Instance?.State != GameManager.GameState.Playing) return;
         _isCharging = false;
         float chargeRatio = Mathf.Clamp01(_chargeTimer / config.chargeTime);
         _pendingJumpForce = Mathf.Lerp(config.minJumpForce, config.maxJumpForce, chargeRatio);
@@ -77,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleHorizontalMovement()
     {
+        if (GameManager.Instance?.State != GameManager.GameState.Playing) return;
         Vector2 vel = _rb.linearVelocity;
         vel.x = config.moveSpeed;
         _rb.linearVelocity = vel;

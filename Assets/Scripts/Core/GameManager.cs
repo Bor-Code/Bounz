@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private PlayerController player;
+    [SerializeField] private CameraFollow cameraFollow;
 
     public GameState State { get; private set; } = GameState.Idle;
 
@@ -19,13 +20,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartGame();
+        // Oyun başlatmayı StartScreenUI'ya bırakıyoruz.
+        // StartGame() sahneye yerleştirilmiş StartScreenUI tarafından çağrılır.
     }
 
     public void StartGame()
     {
+        if (State == GameState.Playing) return;
         State = GameState.Playing;
         ScoreManager.Instance.StartTracking(player.transform);
+        cameraFollow?.StartFollowing(player.transform);
     }
 
     public void TriggerGameOver()
