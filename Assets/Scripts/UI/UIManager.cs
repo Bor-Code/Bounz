@@ -98,16 +98,26 @@ public class UIManager : MonoBehaviour
     }
     private void OnReviveClicked()
     {
-        // Gerçek bir projede burada reklam API'si (Unity Ads/AdMob) çağrılır.
-        // Reklam başarılı izlendikten sonra alttaki RevivePlayer() çalıştırılır.
-        
-        if (reviveButton != null)
-            reviveButton.gameObject.SetActive(false); // Sadece 1 kez dirilme hakkı
-            
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-            
-        if (GameManager.Instance != null)
-            GameManager.Instance.RevivePlayer();
+        if (AdManager.Instance != null)
+        {
+            AdManager.Instance.ShowRewardedAd(
+                onSuccess: () => 
+                {
+                    if (reviveButton != null) reviveButton.gameObject.SetActive(false);
+                    if (gameOverPanel != null) gameOverPanel.SetActive(false);
+                    if (GameManager.Instance != null) GameManager.Instance.RevivePlayer();
+                },
+                onFailed: () => 
+                {
+                    // Reklam yüklenemedi uyarısı verilebilir.
+                }
+            );
+        }
+        else
+        {
+            if (reviveButton != null) reviveButton.gameObject.SetActive(false);
+            if (gameOverPanel != null) gameOverPanel.SetActive(false);
+            if (GameManager.Instance != null) GameManager.Instance.RevivePlayer();
+        }
     }
 }
