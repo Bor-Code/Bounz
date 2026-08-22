@@ -83,6 +83,10 @@ public class SkinManager : MonoBehaviour
         {
             UnlockSkin(id);
             SelectSkin(id); 
+            if (AnalyticsManager.Instance != null)
+            {
+                AnalyticsManager.Instance.LogSkinPurchased(id, price);
+            }
             return true;
         }
         return false;
