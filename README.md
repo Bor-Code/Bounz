@@ -37,6 +37,3 @@
 3. Don't fall, avoid the moving spikes, and grab as many coins as you can!
 
 ---
-<div align="center">
-  <i>Developed with ❤️ for hyper-casual gamers.</i>
-</div>
