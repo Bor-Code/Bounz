@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Oyunun başlangıç ekranını yönetir.
@@ -21,6 +22,12 @@ public class StartScreenUI : MonoBehaviour
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text tapPromptText;
     [SerializeField] private TMP_Text bestScoreText;
+    [SerializeField] private TMP_Text bestScoreText;
+
+    [Header("Shop Integration")]
+    [SerializeField] private Button shopButton;
+    [SerializeField] private SkinStoreUI storeUI;
+    private bool _isStoreOpen = false;
 
     [Header("Animasyon")]
     [Tooltip("Tap prompt'un soluk alıp verme hızı (saniye).")]
@@ -48,14 +55,41 @@ public class StartScreenUI : MonoBehaviour
 
         // Pulse animasyonunu başlat
         StartCoroutine(PulsePrompt());
+
+        if (shopButton != null)
+        {
+            shopButton.onClick.AddListener(OpenShop);
+        }
+    }
+
+    private void OpenShop()
+    {
+        _isStoreOpen = true;
+        if (storeUI != null) storeUI.OpenStore();
+    }
+
+    public void OnStoreClosed()
+    {
+        _isStoreOpen = false;
     }
 
     private void Update()
     {
-        if (_gameStarted) return;
+        if (_gameStarted || _isStoreOpen) return;
+
+        // UI elemanlarına (örneğin Shop butonuna) tıklanıp tıklanmadığını kontrol et
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            // Eğer mobildeysek, tüm dokunmaları kontrol et
+            if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            {
+                return;
+            }
+            if (Input.touchCount == 0) return; // Mouse click over UI
+        }
 
         // Herhangi bir dokunuş veya mouse tıklaması
-        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
             BeginGame();
         }
