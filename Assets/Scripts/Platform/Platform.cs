@@ -23,7 +23,9 @@ public class Platform : MonoBehaviour
     public void Initialize(PlatformType type, float width)
     {
         Type = type;
+
         _col.size = new Vector2(width, _col.size.y);
+
         _sr.color = type switch
         {
             PlatformType.Spring    => ColorSpring,
@@ -31,5 +33,12 @@ public class Platform : MonoBehaviour
             PlatformType.SizeShift => ColorSizeShift,
             _                      => ColorSafe
         };
+
+        switch (type)
+        {
+            case PlatformType.Spring:    gameObject.AddComponent<SpringPlatform>();    break;
+            case PlatformType.Fragile:   gameObject.AddComponent<FragilePlatform>();   break;
+            case PlatformType.SizeShift: gameObject.AddComponent<SizeShiftPlatform>(); break;
+        }
     }
 }
