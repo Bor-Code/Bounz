@@ -5,7 +5,8 @@ public enum PlatformType
     Safe,
     Spring,
     Fragile,
-    SizeShift
+    SizeShift,
+    Moving
 }
 
 [System.Serializable]

@@ -19,12 +19,14 @@ public class Platform : MonoBehaviour
     public static readonly Color ColorSpring    = new Color(0.98f, 0.87f, 0.26f);
     public static readonly Color ColorFragile   = new Color(0.95f, 0.29f, 0.29f);
     public static readonly Color ColorSizeShift = new Color(0.62f, 0.27f, 0.93f);
+    public static readonly Color ColorMoving    = new Color(0.2f, 0.6f, 1f);
 
     private SpriteRenderer    _sr;
     private BoxCollider2D     _col;
     private SpringPlatform    _spring;
     private FragilePlatform   _fragile;
     private SizeShiftPlatform _sizeShift;
+    private MovingPlatform    _moving;
 
     public PlatformType Type { get; private set; }
 
@@ -35,9 +37,10 @@ public class Platform : MonoBehaviour
         _spring    = GetComponent<SpringPlatform>();
         _fragile   = GetComponent<FragilePlatform>();
         _sizeShift = GetComponent<SizeShiftPlatform>();
+        _moving    = GetComponent<MovingPlatform>();
 
         // Prefab'da hepsi disabled gelir
-        SetBehaviours(false, false, false);
+        SetBehaviours(false, false, false, false);
     }
 
     /// <summary>
@@ -59,6 +62,7 @@ public class Platform : MonoBehaviour
             PlatformType.Spring    => ColorSpring,
             PlatformType.Fragile   => ColorFragile,
             PlatformType.SizeShift => ColorSizeShift,
+            PlatformType.Moving    => ColorMoving,
             _                      => ColorSafe
         };
 
@@ -66,12 +70,14 @@ public class Platform : MonoBehaviour
         SetBehaviours(
             type == PlatformType.Spring,
             type == PlatformType.Fragile,
-            type == PlatformType.SizeShift);
+            type == PlatformType.SizeShift,
+            type == PlatformType.Moving);
 
         // Her bileşeni sıfırla
         _spring?.ResetState();
         _fragile?.ResetState();
         _sizeShift?.ResetState();
+        _moving?.ResetState();
     }
 
     /// <summary>
@@ -80,13 +86,14 @@ public class Platform : MonoBehaviour
     /// </summary>
     public void Cleanup()
     {
-        SetBehaviours(false, false, false);
+        SetBehaviours(false, false, false, false);
     }
 
-    private void SetBehaviours(bool spring, bool fragile, bool sizeShift)
+    private void SetBehaviours(bool spring, bool fragile, bool sizeShift, bool moving)
     {
         if (_spring    != null) _spring.enabled    = spring;
         if (_fragile   != null) _fragile.enabled   = fragile;
         if (_sizeShift != null) _sizeShift.enabled = sizeShift;
+        if (_moving    != null) _moving.enabled    = moving;
     }
 }
