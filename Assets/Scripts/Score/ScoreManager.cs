@@ -16,7 +16,14 @@ public class ScoreManager : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        _highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+    }
+
+    private void Start()
+    {
+        if (SaveManager.Instance != null)
+        {
+            _highScore = SaveManager.Instance.CurrentSave.highScore;
+        }
     }
     private float _lastX;
     private float _floatScore;
@@ -67,14 +74,21 @@ public class ScoreManager : MonoBehaviour
         if (isNewHighScore)
         {
             _highScore = _score;
-            PlayerPrefs.SetInt(HighScoreKey, _highScore);
-            PlayerPrefs.Save();
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.CurrentSave.highScore = _highScore;
+                SaveManager.Instance.SaveGame();
+            }
         }
         ScoreEvents.RaiseGameOver(_score, isNewHighScore);
     }
     public void ResetHighScore()
     {
         _highScore = 0;
-        PlayerPrefs.DeleteKey(HighScoreKey);
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.CurrentSave.highScore = 0;
+            SaveManager.Instance.SaveGame();
+        }
     }
 }
