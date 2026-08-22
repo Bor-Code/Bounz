@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
         ScoreEvents.OnGameOver     -= HandleGameOver;
         GameEvents.OnCoinCollected -= HandleCoinCollected;
     }
+    [SerializeField] private Button reviveButton;
     private void Start()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
@@ -37,6 +38,8 @@ public class UIManager : MonoBehaviour
         UpdateCoinUI();
         if (restartButton != null)
             restartButton.onClick.AddListener(OnRestartClicked);
+        if (reviveButton != null)
+            reviveButton.onClick.AddListener(OnReviveClicked);
     }
     private void HandleScoreChanged(int score)
     {
@@ -65,6 +68,8 @@ public class UIManager : MonoBehaviour
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+            if (reviveButton != null)
+                reviveButton.gameObject.SetActive(true);
             StartCoroutine(AnimatePanel());
         }
     }
@@ -90,5 +95,19 @@ public class UIManager : MonoBehaviour
     {
         if (GameManager.Instance != null)
             GameManager.Instance.RestartGame();
+    }
+    private void OnReviveClicked()
+    {
+        // Gerçek bir projede burada reklam API'si (Unity Ads/AdMob) çağrılır.
+        // Reklam başarılı izlendikten sonra alttaki RevivePlayer() çalıştırılır.
+        
+        if (reviveButton != null)
+            reviveButton.gameObject.SetActive(false); // Sadece 1 kez dirilme hakkı
+            
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+            
+        if (GameManager.Instance != null)
+            GameManager.Instance.RevivePlayer();
     }
 }

@@ -82,6 +82,12 @@ public class ScoreManager : MonoBehaviour
         }
         ScoreEvents.RaiseGameOver(_score, isNewHighScore);
     }
+    public void ResumeTracking(Transform player)
+    {
+        _playerTransform = player;
+        _lastX = player.position.x;
+        _isActive = true;
+    }
     public void ResetHighScore()
     {
         _highScore = 0;

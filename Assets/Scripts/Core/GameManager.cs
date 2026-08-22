@@ -37,4 +37,17 @@ public class GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
+    public void RevivePlayer()
+    {
+        if (State != GameState.Dead) return;
+        State = GameState.Playing;
+        
+        // Oyuncuyu havaya ışınlayalım ve kalkan verelim
+        player.transform.position += Vector3.up * 5f;
+        player.ActivateShield();
+        
+        // Skoru kaldığı yerden devam ettir
+        ScoreManager.Instance.ResumeTracking(player.transform);
+        GameEvents.RaiseGameStarted(); // Oyunu tekrar başlatma event'i (müzik vb)
+    }
 }
