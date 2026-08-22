@@ -3,10 +3,17 @@ using UnityEngine;
 
 public class FragilePlatform : MonoBehaviour
 {
-    [SerializeField] private float collapseDelay = 1f;
+    [SerializeField] private float collapseDelay    = 1f;
     [SerializeField] private float breakAnimDuration = 0.3f;
 
     private bool _triggered = false;
+
+    /// <summary>Pool'dan alınınca çağrılır — önceki tetikleme durumunu sıfırlar.</summary>
+    public void ResetState()
+    {
+        _triggered = false;
+        StopAllCoroutines();
+    }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -14,10 +21,10 @@ public class FragilePlatform : MonoBehaviour
         if (col.gameObject.GetComponent<PlayerController>() == null) return;
 
         _triggered = true;
-        StartCoroutine(CollapseRoutine(col.gameObject.GetComponent<PlayerController>()));
+        StartCoroutine(CollapseRoutine());
     }
 
-    private IEnumerator CollapseRoutine(PlayerController player)
+    private IEnumerator CollapseRoutine()
     {
         yield return new WaitForSeconds(collapseDelay);
 
@@ -32,8 +39,12 @@ public class FragilePlatform : MonoBehaviour
             yield return null;
         }
 
-        Destroy(gameObject);
-        GameEvents.RaisePlatformBroken(transform.position);
+        Vector3 brokenPos = transform.position;
+        GameEvents.RaisePlatformBroken(brokenPos);
         GameManager.Instance?.TriggerGameOver();
+
+        // Destroy yerine havuza geri döndür
+        GetComponent<Platform>()?.Cleanup();
+        PlatformPool.Instance?.Return(gameObject);
     }
 }

@@ -7,6 +7,9 @@ public class SizeShiftPlatform : MonoBehaviour
 
     private bool _triggered = false;
 
+    /// <summary>Pool'dan alınınca çağrılır — önceki tetikleme durumunu sıfırlar.</summary>
+    public void ResetState() => _triggered = false;
+
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (_triggered) return;
