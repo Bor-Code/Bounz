@@ -4,10 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(InputHandler))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Konfigürasyon")]
+    [Header("Config")]
     [SerializeField] private PlayerConfig config;
 
-    [Header("Referanslar")]
+    [Header("References")]
     [SerializeField] private GroundDetector groundDetector;
 
     private Rigidbody2D _rb;
