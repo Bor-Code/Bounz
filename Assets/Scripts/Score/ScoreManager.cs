@@ -59,6 +59,11 @@ public class ScoreManager : MonoBehaviour
             PlayerPrefs.Save();
         }
 
+        if (SkinManager.Instance != null)
+        {
+            SkinManager.Instance.AddTotalScore(_score);
+        }
+
         ScoreEvents.RaiseGameOver(_score, isNewHighScore);
     }
 
