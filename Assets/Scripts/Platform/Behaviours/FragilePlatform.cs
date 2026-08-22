@@ -33,6 +33,7 @@ public class FragilePlatform : MonoBehaviour
         }
 
         Destroy(gameObject);
+        GameEvents.RaisePlatformBroken(transform.position);
         GameManager.Instance?.TriggerGameOver();
     }
 }

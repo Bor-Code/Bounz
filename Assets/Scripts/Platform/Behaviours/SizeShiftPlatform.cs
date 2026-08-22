@@ -16,6 +16,7 @@ public class SizeShiftPlatform : MonoBehaviour
 
         _triggered = true;
         float multiplier = Random.Range(minMultiplier, maxMultiplier);
+        GameEvents.RaiseSizeShifted(multiplier);
         player.ApplyScaleChange(multiplier);
     }
 }

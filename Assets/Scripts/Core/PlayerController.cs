@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private bool _isCharging = false;
     private bool _jumpRequested = false;
     private float _pendingJumpForce = 0f;
+    private float _pendingChargeRatio = 0f;
+    private bool _wasGrounded = false;
 
     private void Awake()
     {
@@ -46,11 +48,22 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_jumpRequested && groundDetector.IsGrounded)
+        // Landing tespiti
+        bool isGrounded = groundDetector.IsGrounded;
+        if (isGrounded && !_wasGrounded)
         {
+            float impactSpeed = Mathf.Abs(_rb.linearVelocity.y);
+            GameEvents.RaisePlayerLanded(impactSpeed);
+        }
+        _wasGrounded = isGrounded;
+
+        if (_jumpRequested && isGrounded)
+        {
+            GameEvents.RaisePlayerJumped(_pendingChargeRatio);
             ExecuteJump(_pendingJumpForce);
             _jumpRequested = false;
             _pendingJumpForce = 0f;
+            _pendingChargeRatio = 0f;
         }
     }
 
@@ -66,7 +79,8 @@ public class PlayerController : MonoBehaviour
         if (GameManager.Instance?.State != GameManager.GameState.Playing) return;
         _isCharging = false;
         float chargeRatio = Mathf.Clamp01(_chargeTimer / config.chargeTime);
-        _pendingJumpForce = Mathf.Lerp(config.minJumpForce, config.maxJumpForce, chargeRatio);
+        _pendingJumpForce  = Mathf.Lerp(config.minJumpForce, config.maxJumpForce, chargeRatio);
+        _pendingChargeRatio = chargeRatio;
         _jumpRequested = true;
         _chargeTimer = 0f;
     }
