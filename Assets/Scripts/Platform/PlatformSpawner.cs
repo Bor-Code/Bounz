@@ -8,7 +8,6 @@ public class PlatformSpawner : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject platformPrefab;
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnAheadDistance = 20f;
@@ -67,8 +66,10 @@ public class PlatformSpawner : MonoBehaviour
 
     private void SpawnPlatformAt(Vector2 position, float width, PlatformType type)
     {
-        GameObject go = Instantiate(platformPrefab, position, Quaternion.identity);
-        go.GetComponent<Platform>().Initialize(type, width);
+        if (PlatformPool.Instance == null) return;
+        
+        GameObject go = PlatformPool.Instance.Get(position);
+        go.GetComponent<Platform>()?.Initialize(type, width);
         _activePlatforms.Add(go);
     }
 
@@ -84,7 +85,15 @@ public class PlatformSpawner : MonoBehaviour
 
             if (_activePlatforms[i].transform.position.x < player.position.x - despawnBehindDistance)
             {
-                Destroy(_activePlatforms[i]);
+                if (PlatformPool.Instance != null)
+                {
+                    _activePlatforms[i].GetComponent<Platform>()?.Cleanup();
+                    PlatformPool.Instance.Return(_activePlatforms[i]);
+                }
+                else
+                {
+                    Destroy(_activePlatforms[i]);
+                }
                 _activePlatforms.RemoveAt(i);
             }
         }
