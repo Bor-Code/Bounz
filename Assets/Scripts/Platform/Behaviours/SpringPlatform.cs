@@ -9,6 +9,7 @@ public class SpringPlatform : MonoBehaviour
         PlayerController player = col.gameObject.GetComponent<PlayerController>();
         if (player == null) return;
 
+        GameEvents.RaiseSpringBounced();
         player.ForceJump(launchForce);
     }
 }

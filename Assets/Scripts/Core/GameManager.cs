@@ -30,12 +30,15 @@ public class GameManager : MonoBehaviour
         State = GameState.Playing;
         ScoreManager.Instance.StartTracking(player.transform);
         cameraFollow?.StartFollowing(player.transform);
+        GameEvents.RaiseGameStarted();
+        AudioManager.Instance?.PlayMusic();
     }
 
     public void TriggerGameOver()
     {
         if (State != GameState.Playing) return;
         State = GameState.Dead;
+        GameEvents.RaisePlayerDied(player.transform.position);
         ScoreManager.Instance.EndGame();
     }
 
