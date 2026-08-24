@@ -198,7 +198,7 @@ public class SkinManager : MonoBehaviour
 
         {
 
-            PlayerController player = FindFirstObjectByType<PlayerController>();
+            PlayerController player = FindAnyObjectByType<PlayerController>();
 
             if (player != null) playerVisual = player.GetComponentInChildren<SpriteRenderer>();
 

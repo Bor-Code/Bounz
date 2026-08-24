@@ -39,17 +39,17 @@ public class EnergyUI : MonoBehaviour
 
         if (energyText != null)
         {
-            energyText.text = $"{EnergyManager.Instance.CurrentEnergy}/5";
+            energyText.text = $"{EnergyManager.Instance.CurrentEnergy}/{EnergyManager.Instance.MaxEnergy}";
         }
 
-        if (EnergyManager.Instance.CurrentEnergy >= 5)
+        if (EnergyManager.Instance.CurrentEnergy >= EnergyManager.Instance.MaxEnergy)
         {
             if (timerText != null) timerText.text = "DOLU";
             if (outOfEnergyPanel != null) outOfEnergyPanel.SetActive(false);
         }
         else
         {
-            if (timerText != null) 
+            if (timerText != null)
             {
                 var time = EnergyManager.Instance.TimeUntilNextEnergy;
                 timerText.text = $"{time.Minutes:D2}:{time.Seconds:D2}";
@@ -64,17 +64,11 @@ public class EnergyUI : MonoBehaviour
 
     private void OnBuyWithCoinsClicked()
     {
-        if (EnergyManager.Instance != null)
-        {
-            EnergyManager.Instance.RefillEnergyWithCoins();
-        }
+        EnergyManager.Instance?.RefillEnergyWithCoins();
     }
 
     private void OnWatchAdClicked()
     {
-        if (EnergyManager.Instance != null)
-        {
-            EnergyManager.Instance.RefillEnergyWithAd();
-        }
+        EnergyManager.Instance?.RefillEnergyWithAd();
     }
 }

@@ -45,10 +45,7 @@ public class DailyRewardUI : MonoBehaviour
             {
                 if (rewardPanel != null) rewardPanel.SetActive(false);
                 
-                if (GameEvents.RaiseCoinCollected != null)
-                {
-                    // Efekt oynatmak için hayali bir pozisyonda para toplanmış gibi event tetiklenebilir.
-                }
+                GameEvents.RaiseCoinCollected(Vector3.zero);
             }
         }
     }

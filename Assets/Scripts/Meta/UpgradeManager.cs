@@ -28,8 +28,12 @@ public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance { get; private set; }
 
+    public const string MagnetDurationUpgradeId = "magnet_duration";
+    public const string ShieldDurationUpgradeId = "shield_duration";
+    public const string CoinMultiplierUpgradeId = "coin_multiplier";
+
     [SerializeField] private List<UpgradeStat> upgrades = new List<UpgradeStat>();
-    
+
     private const string UpgradeSavePrefix = "UpgradeLevel_";
 
     public event Action OnUpgradesChanged;
@@ -39,7 +43,6 @@ public class UpgradeManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
         InitializeUpgrades();
     }
 
@@ -47,9 +50,9 @@ public class UpgradeManager : MonoBehaviour
     {
         if (upgrades.Count == 0)
         {
-            upgrades.Add(new UpgradeStat { id = "magnet_duration", displayName = "Mıknatıs Süresi", currentLevel = 0, maxLevel = 5, baseCost = 1000, baseValue = 5f, valuePerLevel = 1f });
-            upgrades.Add(new UpgradeStat { id = "shield_duration", displayName = "Kalkan Süresi", currentLevel = 0, maxLevel = 5, baseCost = 1000, baseValue = 5f, valuePerLevel = 1f });
-            upgrades.Add(new UpgradeStat { id = "coin_multiplier", displayName = "Altın Çarpanı", currentLevel = 0, maxLevel = 5, baseCost = 1500, baseValue = 1f, valuePerLevel = 0.2f });
+            upgrades.Add(new UpgradeStat { id = MagnetDurationUpgradeId, displayName = "Mıknatıs Süresi", currentLevel = 0, maxLevel = 5, baseCost = 1000, baseValue = 5f, valuePerLevel = 1f });
+            upgrades.Add(new UpgradeStat { id = ShieldDurationUpgradeId, displayName = "Kalkan Süresi", currentLevel = 0, maxLevel = 5, baseCost = 1000, baseValue = 5f, valuePerLevel = 1f });
+            upgrades.Add(new UpgradeStat { id = CoinMultiplierUpgradeId, displayName = "Altın Çarpanı", currentLevel = 0, maxLevel = 5, baseCost = 1500, baseValue = 1f, valuePerLevel = 0.2f });
         }
 
         foreach (var upgrade in upgrades)
@@ -63,6 +66,12 @@ public class UpgradeManager : MonoBehaviour
     public UpgradeStat GetUpgrade(string id)
     {
         return upgrades.Find(u => u.id == id);
+    }
+
+    public float GetUpgradeValue(string id, float fallback)
+    {
+        UpgradeStat stat = GetUpgrade(id);
+        return stat != null ? stat.GetCurrentValue() : fallback;
     }
 
     public bool BuyUpgrade(string id)
