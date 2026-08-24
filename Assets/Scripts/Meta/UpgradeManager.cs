@@ -54,7 +54,7 @@ public class UpgradeManager : MonoBehaviour
 
         foreach (var upgrade in upgrades)
         {
-            upgrade.currentLevel = PlayerPrefs.GetInt(UpgradeSavePrefix + upgrade.id, 0);
+            upgrade.currentLevel = SaveManager.GetIntValue(UpgradeSavePrefix + upgrade.id, 0);
         }
     }
 
@@ -79,8 +79,7 @@ public class UpgradeManager : MonoBehaviour
                 SaveManager.Instance.SaveGame();
 
                 stat.currentLevel++;
-                PlayerPrefs.SetInt(UpgradeSavePrefix + stat.id, stat.currentLevel);
-                PlayerPrefs.Save();
+                SaveManager.SetIntValue(UpgradeSavePrefix + stat.id, stat.currentLevel);
 
                 OnUpgradesChanged?.Invoke();
                 return true;

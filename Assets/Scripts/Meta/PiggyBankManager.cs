@@ -7,7 +7,6 @@ public class PiggyBankManager : MonoBehaviour
 
     private const string PiggyBankCoinsKey = "PiggyBankCoins";
     private const string PiggyBankLevelKey = "PiggyBankLevel";
-    private const string PiggyBankIAPId = "com.bounz.piggybank_smash";
 
     [SerializeField] private int baseCapacity = 2000;
     [SerializeField] private int capacityIncreasePerLevel = 1000;
@@ -25,7 +24,6 @@ public class PiggyBankManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
         LoadPiggyBank();
     }
 
@@ -41,22 +39,20 @@ public class PiggyBankManager : MonoBehaviour
 
     private void LoadPiggyBank()
     {
-        CurrentCoins = PlayerPrefs.GetInt(PiggyBankCoinsKey, 0);
-        CurrentLevel = PlayerPrefs.GetInt(PiggyBankLevelKey, 0);
+        CurrentCoins = SaveManager.GetIntValue(PiggyBankCoinsKey, 0);
+        CurrentLevel = SaveManager.GetIntValue(PiggyBankLevelKey, 0);
     }
 
     private void SavePiggyBank()
     {
-        PlayerPrefs.SetInt(PiggyBankCoinsKey, CurrentCoins);
-        PlayerPrefs.SetInt(PiggyBankLevelKey, CurrentLevel);
-        PlayerPrefs.Save();
-        
+        SaveManager.SetIntValue(PiggyBankCoinsKey, CurrentCoins);
+        SaveManager.SetIntValue(PiggyBankLevelKey, CurrentLevel);
         OnPiggyBankUpdated?.Invoke();
     }
 
     private void HandleGameOver(int finalScore, bool isNewHighScore)
     {
-        if (CurrentCoins >= CurrentCapacity) return; 
+        if (CurrentCoins >= CurrentCapacity) return;
 
         int coinsToBank = Mathf.FloorToInt(finalScore * scoreToCoinRatio);
         if (coinsToBank > 0)
@@ -71,7 +67,20 @@ public class PiggyBankManager : MonoBehaviour
         return CurrentCoins >= CurrentCapacity;
     }
 
-    // Gerçekte IAP üzerinden satın alma (Smash) yapıldığında tetiklenir
+    public void PurchaseAndSmashPiggyBank()
+    {
+        if (CurrentCoins <= 0) return;
+
+        if (IAPManager.Instance != null)
+        {
+            IAPManager.Instance.BuyProduct(IAPManager.PRODUCT_PIGGY_BANK_SMASH, SmashPiggyBank);
+        }
+        else
+        {
+            SmashPiggyBank();
+        }
+    }
+
     public void SmashPiggyBank()
     {
         if (CurrentCoins > 0 && SaveManager.Instance != null)
@@ -82,12 +91,6 @@ public class PiggyBankManager : MonoBehaviour
             CurrentCoins = 0;
             CurrentLevel++;
             SavePiggyBank();
-            
-            if (AnalyticsManager.Instance != null)
-            {
-                AnalyticsManager.Instance.LogIAPPurchased(PiggyBankIAPId);
-            }
-            
             OnPiggyBankSmashed?.Invoke();
         }
     }

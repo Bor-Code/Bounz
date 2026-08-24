@@ -24,7 +24,7 @@ public class OfflineEarningsManager : MonoBehaviour
 
     private void CalculateOfflineEarnings()
     {
-        string lastSessionStr = PlayerPrefs.GetString(LastSessionTimeKey, "");
+        string lastSessionStr = SaveManager.GetStringValue(LastSessionTimeKey, "");
         if (string.IsNullOrEmpty(lastSessionStr))
         {
             UpdateLastSessionTime();
@@ -72,7 +72,6 @@ public class OfflineEarningsManager : MonoBehaviour
 
     private void UpdateLastSessionTime()
     {
-        PlayerPrefs.SetString(LastSessionTimeKey, DateTime.Now.ToBinary().ToString());
-        PlayerPrefs.Save();
+        SaveManager.SetStringValue(LastSessionTimeKey, DateTime.Now.ToBinary().ToString());
     }
 }

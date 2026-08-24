@@ -35,21 +35,20 @@ public class ProfileManager : MonoBehaviour
     {
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSave != null)
         {
-            CurrentLevel = PlayerPrefs.GetInt(LevelSaveKey, 1);
-            CurrentXP = PlayerPrefs.GetInt(XPSaveKey, 0);
+            CurrentLevel = SaveManager.GetIntValue(LevelSaveKey, 1);
+            CurrentXP = SaveManager.GetIntValue(XPSaveKey, 0);
         }
         else
         {
-            CurrentLevel = PlayerPrefs.GetInt(LevelSaveKey, 1);
-            CurrentXP = PlayerPrefs.GetInt(XPSaveKey, 0);
+            CurrentLevel = SaveManager.GetIntValue(LevelSaveKey, 1);
+            CurrentXP = SaveManager.GetIntValue(XPSaveKey, 0);
         }
     }
 
     private void SaveProfile()
     {
-        PlayerPrefs.SetInt(LevelSaveKey, CurrentLevel);
-        PlayerPrefs.SetInt(XPSaveKey, CurrentXP);
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(LevelSaveKey, CurrentLevel);
+        SaveManager.SetIntValue(XPSaveKey, CurrentXP);
     }
 
     private void HandleGameOver(int finalScore, bool isNewHighScore)

@@ -48,8 +48,8 @@ public class BattlePassManager : MonoBehaviour
 
     private void LoadPassData()
     {
-        CurrentTokens = PlayerPrefs.GetInt(TokensSaveKey, 0);
-        IsPremiumOwned = PlayerPrefs.GetInt(PremiumSaveKey, 0) == 1;
+        CurrentTokens = SaveManager.GetIntValue(TokensSaveKey, 0);
+        IsPremiumOwned = SaveManager.GetIntValue(PremiumSaveKey, 0) == 1;
 
         if (tiers.Count == 0)
         {
@@ -60,22 +60,21 @@ public class BattlePassManager : MonoBehaviour
 
         for (int i = 0; i < tiers.Count; i++)
         {
-            tiers[i].isFreeClaimed = PlayerPrefs.GetInt(ClaimsSaveKey + "Free_" + i, 0) == 1;
-            tiers[i].isPremiumClaimed = PlayerPrefs.GetInt(ClaimsSaveKey + "Prem_" + i, 0) == 1;
+            tiers[i].isFreeClaimed = SaveManager.GetIntValue(ClaimsSaveKey + "Free_" + i, 0) == 1;
+            tiers[i].isPremiumClaimed = SaveManager.GetIntValue(ClaimsSaveKey + "Prem_" + i, 0) == 1;
         }
     }
 
     private void SavePassData()
     {
-        PlayerPrefs.SetInt(TokensSaveKey, CurrentTokens);
-        PlayerPrefs.SetInt(PremiumSaveKey, IsPremiumOwned ? 1 : 0);
+        SaveManager.SetIntValue(TokensSaveKey, CurrentTokens);
+        SaveManager.SetIntValue(PremiumSaveKey, IsPremiumOwned ? 1 : 0);
         
         for (int i = 0; i < tiers.Count; i++)
         {
-            PlayerPrefs.SetInt(ClaimsSaveKey + "Free_" + i, tiers[i].isFreeClaimed ? 1 : 0);
-            PlayerPrefs.SetInt(ClaimsSaveKey + "Prem_" + i, tiers[i].isPremiumClaimed ? 1 : 0);
+            SaveManager.SetIntValue(ClaimsSaveKey + "Free_" + i, tiers[i].isFreeClaimed ? 1 : 0);
+            SaveManager.SetIntValue(ClaimsSaveKey + "Prem_" + i, tiers[i].isPremiumClaimed ? 1 : 0);
         }
-        PlayerPrefs.Save();
         
         OnPassUpdated?.Invoke();
     }
