@@ -15,7 +15,7 @@ public class MuteButton : MonoBehaviour
     private bool _isMuted;
     private void Start()
     {
-        _isMuted = PlayerPrefs.GetInt(MuteKey, 0) == 1;
+        _isMuted = SaveManager.GetIntValue(MuteKey, 0) == 1;
         ApplyMute(_isMuted);
         if (button != null)
             button.onClick.AddListener(ToggleMute);
@@ -24,8 +24,7 @@ public class MuteButton : MonoBehaviour
     private void ToggleMute()
     {
         _isMuted = !_isMuted;
-        PlayerPrefs.SetInt(MuteKey, _isMuted ? 1 : 0);
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(MuteKey, _isMuted ? 1 : 0);
         ApplyMute(_isMuted);
         UpdateLabel();
     }

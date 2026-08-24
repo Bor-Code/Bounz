@@ -44,7 +44,7 @@ public class PromoCodeManager : MonoBehaviour
 
         string upperCode = inputCode.ToUpperInvariant().Trim();
 
-        if (PlayerPrefs.GetInt(RedeemedCodesKey + upperCode, 0) == 1)
+        if (SaveManager.GetIntValue(RedeemedCodesKey + upperCode, 0) == 1)
         {
             OnCodeRedeemedFailed?.Invoke("Bu kod zaten kullanılmış.");
             return;
@@ -55,8 +55,7 @@ public class PromoCodeManager : MonoBehaviour
         if (foundCode != null)
         {
             GrantReward(foundCode);
-            PlayerPrefs.SetInt(RedeemedCodesKey + upperCode, 1);
-            PlayerPrefs.Save();
+            SaveManager.SetIntValue(RedeemedCodesKey + upperCode, 1);
             OnCodeRedeemedSuccess?.Invoke("Tebrikler! Ödül başarıyla eklendi.");
         }
         else

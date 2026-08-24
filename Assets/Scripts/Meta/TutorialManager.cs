@@ -21,18 +21,17 @@ public class TutorialManager : MonoBehaviour
     {
         if (SaveManager.Instance != null && SaveManager.Instance.CurrentSave != null)
         {
-            IsTutorialCompleted = PlayerPrefs.GetInt(TutorialSaveKey, 0) == 1;
+            IsTutorialCompleted = SaveManager.GetIntValue(TutorialSaveKey, 0) == 1;
         }
         else
         {
-            IsTutorialCompleted = PlayerPrefs.GetInt(TutorialSaveKey, 0) == 1;
+            IsTutorialCompleted = SaveManager.GetIntValue(TutorialSaveKey, 0) == 1;
         }
     }
 
     public void CompleteTutorial()
     {
         IsTutorialCompleted = true;
-        PlayerPrefs.SetInt(TutorialSaveKey, 1);
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(TutorialSaveKey, 1);
     }
 }

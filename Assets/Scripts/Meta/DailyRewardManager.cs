@@ -17,8 +17,8 @@ public class DailyRewardManager : MonoBehaviour
     }
     private void CheckRewardStatus()
     {
-        string lastClaimStr = PlayerPrefs.GetString(LastClaimTimeKey, "");
-        CurrentStreak = PlayerPrefs.GetInt(CurrentStreakKey, 0);
+        string lastClaimStr = SaveManager.GetStringValue(LastClaimTimeKey, "");
+        CurrentStreak = SaveManager.GetIntValue(CurrentStreakKey, 0);
         if (string.IsNullOrEmpty(lastClaimStr))
         {
             CanClaimReward = true;
@@ -63,9 +63,8 @@ public class DailyRewardManager : MonoBehaviour
         {
             CurrentStreak = 0;
         }
-        PlayerPrefs.SetInt(CurrentStreakKey, CurrentStreak);
-        PlayerPrefs.SetString(LastClaimTimeKey, DateTime.Now.ToBinary().ToString());
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(CurrentStreakKey, CurrentStreak);
+        SaveManager.SetStringValue(LastClaimTimeKey, DateTime.Now.ToBinary().ToString());
         CanClaimReward = false;
         return true;
     }

@@ -35,13 +35,13 @@ public class EnergyManager : MonoBehaviour
 
     private void LoadEnergy()
     {
-        CurrentEnergy = PlayerPrefs.GetInt(EnergySaveKey, maxEnergy);
+        CurrentEnergy = SaveManager.GetIntValue(EnergySaveKey, maxEnergy);
         CheckEnergyRegen();
     }
 
     private void CheckEnergyRegen()
     {
-        string lastRegenStr = PlayerPrefs.GetString(LastEnergyTimeKey, "");
+        string lastRegenStr = SaveManager.GetStringValue(LastEnergyTimeKey, "");
         if (string.IsNullOrEmpty(lastRegenStr))
         {
             UpdateLastRegenTime(DateTime.Now);
@@ -77,14 +77,12 @@ public class EnergyManager : MonoBehaviour
 
     private void UpdateLastRegenTime(DateTime time)
     {
-        PlayerPrefs.SetString(LastEnergyTimeKey, time.ToBinary().ToString());
-        PlayerPrefs.Save();
+        SaveManager.SetStringValue(LastEnergyTimeKey, time.ToBinary().ToString());
     }
 
     private void SaveEnergy()
     {
-        PlayerPrefs.SetInt(EnergySaveKey, CurrentEnergy);
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(EnergySaveKey, CurrentEnergy);
         OnEnergyUpdated?.Invoke();
     }
 

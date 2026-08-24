@@ -38,7 +38,7 @@ public class DailySpinManager : MonoBehaviour
 
     public bool CanSpin()
     {
-        string lastSpinStr = PlayerPrefs.GetString(LastSpinTimeKey, "");
+        string lastSpinStr = SaveManager.GetStringValue(LastSpinTimeKey, "");
         if (string.IsNullOrEmpty(lastSpinStr))
         {
             return true;
@@ -58,8 +58,7 @@ public class DailySpinManager : MonoBehaviour
     {
         if (!CanSpin()) return;
 
-        PlayerPrefs.SetString(LastSpinTimeKey, DateTime.Now.ToBinary().ToString());
-        PlayerPrefs.Save();
+        SaveManager.SetStringValue(LastSpinTimeKey, DateTime.Now.ToBinary().ToString());
 
         SpinReward wonReward = GetRandomReward();
         

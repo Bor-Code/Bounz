@@ -48,7 +48,7 @@ public class LocalizationManager : MonoBehaviour
 
     private void LoadLanguage()
     {
-        int langIndex = PlayerPrefs.GetInt(LanguageSaveKey, -1);
+        int langIndex = SaveManager.GetIntValue(LanguageSaveKey, -1);
         if (langIndex == -1)
         {
             if (Application.systemLanguage == SystemLanguage.Turkish)
@@ -65,8 +65,7 @@ public class LocalizationManager : MonoBehaviour
     public void SetLanguage(Language language)
     {
         currentLanguage = language;
-        PlayerPrefs.SetInt(LanguageSaveKey, (int)currentLanguage);
-        PlayerPrefs.Save();
+        SaveManager.SetIntValue(LanguageSaveKey, (int)currentLanguage);
         
         OnLanguageChanged?.Invoke();
     }

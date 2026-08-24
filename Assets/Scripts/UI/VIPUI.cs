@@ -50,10 +50,6 @@ public class VIPUI : MonoBehaviour
 
     private void OnBuyVIPClicked()
     {
-        // Gerçekte IAPManager üzerinden satın alım tetiklenir
-        if (VIPManager.Instance != null)
-        {
-            VIPManager.Instance.PurchaseVIP();
-        }
+        VIPManager.Instance?.PurchaseVIPWithIAP();
     }
 }

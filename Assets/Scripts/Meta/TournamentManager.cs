@@ -50,7 +50,7 @@ public class TournamentManager : MonoBehaviour
 
     private void InitializeTournament()
     {
-        string endDateStr = PlayerPrefs.GetString(TournamentEndKey, "");
+        string endDateStr = SaveManager.GetStringValue(TournamentEndKey, "");
         if (string.IsNullOrEmpty(endDateStr))
         {
             StartNewTournament();
@@ -80,7 +80,7 @@ public class TournamentManager : MonoBehaviour
     private void StartNewTournament()
     {
         EndDate = DateTime.Now.AddDays(tournamentDurationDays);
-        PlayerPrefs.SetString(TournamentEndKey, EndDate.ToBinary().ToString());
+        SaveManager.SetStringValue(TournamentEndKey, EndDate.ToBinary().ToString());
         
         GenerateFakeLeaderboard();
         SaveLeaderboard();
@@ -116,7 +116,7 @@ public class TournamentManager : MonoBehaviour
     private void LoadLeaderboard()
     {
         CurrentLeaderboard.Clear();
-        int count = PlayerPrefs.GetInt(TournamentPlayersKey + "Count", 0);
+        int count = SaveManager.GetIntValue(TournamentPlayersKey + "Count", 0);
         if (count == 0)
         {
             GenerateFakeLeaderboard();
@@ -127,9 +127,9 @@ public class TournamentManager : MonoBehaviour
         {
             CurrentLeaderboard.Add(new TournamentPlayer
             {
-                playerName = PlayerPrefs.GetString(TournamentPlayersKey + "Name_" + i),
-                score = PlayerPrefs.GetInt(TournamentPlayersKey + "Score_" + i),
-                isMe = PlayerPrefs.GetInt(TournamentPlayersKey + "IsMe_" + i) == 1
+                playerName = SaveManager.GetStringValue(TournamentPlayersKey + "Name_" + i),
+                score = SaveManager.GetIntValue(TournamentPlayersKey + "Score_" + i),
+                isMe = SaveManager.GetIntValue(TournamentPlayersKey + "IsMe_" + i) == 1
             });
         }
         SortLeaderboard();
@@ -137,14 +137,13 @@ public class TournamentManager : MonoBehaviour
 
     private void SaveLeaderboard()
     {
-        PlayerPrefs.SetInt(TournamentPlayersKey + "Count", CurrentLeaderboard.Count);
+        SaveManager.SetIntValue(TournamentPlayersKey + "Count", CurrentLeaderboard.Count);
         for (int i = 0; i < CurrentLeaderboard.Count; i++)
         {
-            PlayerPrefs.SetString(TournamentPlayersKey + "Name_" + i, CurrentLeaderboard[i].playerName);
-            PlayerPrefs.SetInt(TournamentPlayersKey + "Score_" + i, CurrentLeaderboard[i].score);
-            PlayerPrefs.SetInt(TournamentPlayersKey + "IsMe_" + i, CurrentLeaderboard[i].isMe ? 1 : 0);
+            SaveManager.SetStringValue(TournamentPlayersKey + "Name_" + i, CurrentLeaderboard[i].playerName);
+            SaveManager.SetIntValue(TournamentPlayersKey + "Score_" + i, CurrentLeaderboard[i].score);
+            SaveManager.SetIntValue(TournamentPlayersKey + "IsMe_" + i, CurrentLeaderboard[i].isMe ? 1 : 0);
         }
-        PlayerPrefs.Save();
     }
 
     private void HandleGameOver(int finalScore, bool isNewHighScore)

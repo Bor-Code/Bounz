@@ -85,8 +85,7 @@ public class QuestManager : MonoBehaviour
         }
         else
         {
-            PlayerPrefs.SetString(QuestsSaveKey, json);
-            PlayerPrefs.Save();
+            SaveManager.SetStringValue(QuestsSaveKey, json);
         }
     }
     private void LoadQuests()
@@ -98,7 +97,7 @@ public class QuestManager : MonoBehaviour
         }
         else
         {
-            json = PlayerPrefs.GetString(QuestsSaveKey, "");
+            json = SaveManager.GetStringValue(QuestsSaveKey, "");
         }
         
         if (string.IsNullOrEmpty(json))

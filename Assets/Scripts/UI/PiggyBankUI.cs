@@ -50,28 +50,22 @@ public class PiggyBankUI : MonoBehaviour
 
         if (fillSlider != null)
         {
-            fillSlider.value = (float)current / max;
+            fillSlider.value = max > 0 ? (float)current / max : 0f;
         }
 
+        bool hasCoins = current > 0;
         bool isFull = PiggyBankManager.Instance.IsFull();
+        if (smashButton != null) smashButton.interactable = hasCoins;
         if (fullBadge != null) fullBadge.SetActive(isFull);
-        
-        // IAP Satın alım butonu Kumbara dolu olmadan da tıklanabilir, veya sadece dolunca tıklanabilir yapılabilir.
-        // Genelde dolu olduğunda en iyi değeri verir.
     }
 
     private void OnSmashClicked()
     {
-        if (PiggyBankManager.Instance != null && PiggyBankManager.Instance.CurrentCoins > 0)
-        {
-            // Gerçekte burada IAP ödeme ekranı açılır
-            PiggyBankManager.Instance.SmashPiggyBank();
-        }
+        PiggyBankManager.Instance?.PurchaseAndSmashPiggyBank();
     }
 
     private void HandleSmashed()
     {
-        // Kırılma animasyonları, coin patlama efektleri burada tetiklenebilir
         UpdateUI();
     }
 }
